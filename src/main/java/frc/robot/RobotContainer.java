@@ -68,6 +68,13 @@ public class RobotContainer {
       () -> drive.switcher(4),
       drive
       ));
+    
+    xbox.start().onTrue(Commands.run(
+      () -> drive.controllerTest(-xbox.getLeftX() , -xbox.getLeftY(), xbox.getRightX()), 
+      drive
+      ));
+
+    xbox.back().onTrue(Commands.runOnce(drive::stop, drive));
           
           // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
   //  new Trigger(m_exampleSubsystem::exampleCondition)
