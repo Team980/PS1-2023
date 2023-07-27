@@ -27,12 +27,12 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController xbox =
-      new CommandXboxController(0);
+      new CommandXboxController(2);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     drive.setDefaultCommand(Commands.run(
-      () -> drive.podDriver(xbox.getLeftY(), xbox.getRightX()),
+      () -> drive.podDriver(-xbox.getLeftX(), -xbox.getLeftY() , -xbox.getRightX()),
       drive
       ));
     // Configure the trigger bindings
@@ -49,7 +49,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    xbox.a().onTrue(Commands.runOnce(
+    /*xbox.a().onTrue(Commands.runOnce(
       () -> drive.switcher(1),
       drive
       ));
@@ -75,7 +75,27 @@ public class RobotContainer {
       ));
 
     xbox.back().onTrue(Commands.runOnce(drive::stop, drive));
-          
+
+    xbox.povUp().onTrue(Commands.run(
+      () -> drive.setDirection(0),
+      drive
+      ));
+
+    xbox.povRight().onTrue(Commands.run(
+      () -> drive.setDirection(-45),
+      drive
+      ));
+
+    xbox.povLeft().onTrue(Commands.run(
+      () -> drive.setDirection(45),
+      drive
+      ));
+
+    xbox.povDown().onTrue(Commands.run(
+      () -> drive.setDirection(135),
+      drive
+      ));*/
+    
           // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
   //  new Trigger(m_exampleSubsystem::exampleCondition)
   //      .onTrue(new ExampleCommand(m_exampleSubsystem));

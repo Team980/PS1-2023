@@ -12,20 +12,25 @@ public class SwerveDrive extends SubsystemBase {
   private final double W = 21 + (13 / 16);
   private double r;
 
+  private final double POD1_OFFSET = -199;
+  private final double POD2_OFFSET = -195;
+  private final double POD3_OFFSET = -39;
+  private final double POD4_OFFSET = -183;
 
-  private SwervePod pod1;
-  private SwervePod pod2;
-  private SwervePod pod3;
-  private SwervePod pod4;
+
+  private SwervePod backLeft;//pod1
+  private SwervePod frontLeft;//pod2
+  private SwervePod frontRight;//pod3
+  private SwervePod backRight;//pod4
 
   private int whichPod;
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {
-    pod1 = new SwervePod(1 , false);
-    pod2 = new SwervePod(2 , false);
-    pod3 = new SwervePod(3 , false);
-    pod4 = new SwervePod(4 , false);
+    backLeft = new SwervePod(1 , POD1_OFFSET , false);
+    frontLeft = new SwervePod(2 , POD2_OFFSET , false);
+    frontRight = new SwervePod(3 , POD3_OFFSET , false);
+    backRight = new SwervePod(4 , POD4_OFFSET , false);
 
     whichPod = 1;
 
@@ -42,44 +47,44 @@ public class SwerveDrive extends SubsystemBase {
   public SwervePod getPod(int pod){
     switch(pod){
       case 1:
-        return pod1;
+        return backLeft;
       case 2:
-        return pod2;
+        return frontLeft;
       case 3:
-        return pod3;
+        return frontRight;
        case 4:
-        return pod4;
+        return backRight;
       default:
         return null;
       }
   }
 
-  public void podDriver(double drive , double turn){
+  /*public void podTester(double drive , double turn){
     switch(whichPod){
       case 1:
-        pod1.drivePod(drive);
-        pod1.turnPod(turn);
+        backLeft.drivePod(drive);
+        backLeft.turnPod(turn);
         break;
       case 2:
-        pod2.drivePod(drive);
-        pod2.turnPod(turn);
+        frontLeft.drivePod(drive);
+        frontLeft.turnPod(turn);
         break;
       case 3:
-        pod3.drivePod(drive);
-        pod3.turnPod(turn);
+        frontRight.drivePod(drive);
+        frontRight.turnPod(turn);
         break;
       case 4:
-        pod4.drivePod(drive);
-        pod4.turnPod(turn);
+        backRight.drivePod(drive);
+        backRight.turnPod(turn);
         break;
     }//end switch
-  }
+  }*/
 
   public void switcher(int whichPod){
     this.whichPod = whichPod;
   }
 
-  public void controllerTest(double x1 , double y1 , double x2){
+  public void podDriver(double x1 , double y1 , double x2){
     if(Math.abs(x1) <= .1){
       x1 = 0;
     }
@@ -117,16 +122,19 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("y1", y1);
     SmartDashboard.putNumber("x2", x2);
 
-    /*backRight.drive (backRightSpeed, backRightAngle);
-    backLeft.drive (backLeftSpeed, backLeftAngle);
-    frontRight.drive (frontRightSpeed, frontRightAngle);
-    frontLeft.drive (frontLeftSpeed, frontLeftAngle);*/
+    backRight.drivePod (backRightSpeed, backRightAngle);
+    backLeft.drivePod (backLeftSpeed, backLeftAngle);
+    frontRight.drivePod (frontRightSpeed, frontRightAngle);
+    frontLeft.drivePod (frontLeftSpeed, frontLeftAngle);
 
   }
 
   public void stop(){
-    pod1.drivePod(0);
-    pod1.turnPod(0);
+    podDriver(0, 0, 0);
 
   }
+
+  /*public void setDirection(double direction){
+    pod1.setDirection(direction);
+  }*/
 }
