@@ -44,6 +44,7 @@ public class SwervePod extends SubsystemBase {
     driveEnc = driveMotor.getEncoder();
 
     directionControl = new PIDController((1.0/150), 0, 0);
+    directionControl.enableContinuousInput(-180, 180);
 
     //uncomment when switching to real units instead of rotations and rpm
     //velEnc.setPositionConversionFactor(((4/12) * Math.PI) / (8.14)); //circumference for 4" wheel divided by 12" to a foot / gear ratio * -> feet
@@ -74,6 +75,9 @@ public class SwervePod extends SubsystemBase {
     if(angle > 180){
       angle -= 360;
     }
+    if(angle < -180){
+      angle += 360;
+    }
 
     return angle;
   }
@@ -88,13 +92,43 @@ public class SwervePod extends SubsystemBase {
     
   }
 
-  public void setDirection(double direction){
+  public void spinWheel(double speed){
+    if(Math.abs(speed) > .5){
+      driveMotor.set(speed);
+      }
+    else{
+      swerveMotor.set(0);
+    }
+}
+
+  /*public void setDirection(double direction){
     if(direction > 90){
       direction -= 180;
       driveMotor.setInverted(true);
     }
     else if(direction < -90){
       direction += 180;
+      driveMotor.setInverted(true);
+    }
+    else{
+      driveMotor.setInverted(false);
+    }
+    SmartDashboard.putNumber("pid" + podID, directionControl.calculate(getAngle(), direction));
+    turnPod(directionControl.calculate(getAngle(), direction));
+  }*/
+
+
+  public void setDirection(double direction){
+    double altDir;
+    if(direction > 0){
+      altDir = direction - 180;
+    }
+    else{
+      altDir = direction + 180;
+    }
+    
+    if(Math.abs(getAngle() - direction) > Math.abs(getAngle() - altDir)){
+      direction = altDir;
       driveMotor.setInverted(true);
     }
     else{

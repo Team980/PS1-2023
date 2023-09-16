@@ -59,26 +59,26 @@ public class SwerveDrive extends SubsystemBase {
       }
   }
 
-  /*public void podTester(double drive , double turn){
+  public void podTester(double drive , double turn){
     switch(whichPod){
       case 1:
-        backLeft.drivePod(drive);
+        backLeft.spinWheel(drive);
         backLeft.turnPod(turn);
         break;
       case 2:
-        frontLeft.drivePod(drive);
+        frontLeft.spinWheel(drive);
         frontLeft.turnPod(turn);
         break;
       case 3:
-        frontRight.drivePod(drive);
+        frontRight.spinWheel(drive);
         frontRight.turnPod(turn);
         break;
       case 4:
-        backRight.drivePod(drive);
+        backRight.spinWheel(drive);
         backRight.turnPod(turn);
         break;
     }//end switch
-  }*/
+  }
 
   public void switcher(int whichPod){
     this.whichPod = whichPod;

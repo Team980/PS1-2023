@@ -67,16 +67,16 @@ public class RobotContainer {
     xbox.b().onTrue(Commands.runOnce(
       () -> drive.switcher(4),
       drive
-      ));
+      ));*/
     
     xbox.start().onTrue(Commands.run(
-      () -> drive.controllerTest(-xbox.getLeftX() , -xbox.getLeftY(), xbox.getRightX()), 
+      () -> drive.podTester(-xbox.getLeftY(), (xbox.getRightX() / 2)), 
       drive
       ));
 
     xbox.back().onTrue(Commands.runOnce(drive::stop, drive));
 
-    xbox.povUp().onTrue(Commands.run(
+    /*xbox.povUp().onTrue(Commands.run(
       () -> drive.setDirection(0),
       drive
       ));
