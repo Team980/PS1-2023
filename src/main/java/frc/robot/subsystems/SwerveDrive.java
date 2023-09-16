@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -13,9 +16,9 @@ public class SwerveDrive extends SubsystemBase {
   private double r;
 
   private final double POD1_OFFSET = -199;
-  private final double POD2_OFFSET = -195;
-  private final double POD3_OFFSET = -39;
-  private final double POD4_OFFSET = -183;
+  private final double POD2_OFFSET = -8;
+  private final double POD3_OFFSET = -43;
+  private final double POD4_OFFSET = -19;
 
 
   private SwervePod backLeft;//pod1
@@ -23,10 +26,21 @@ public class SwerveDrive extends SubsystemBase {
   private SwervePod frontRight;//pod3
   private SwervePod backRight;//pod4
 
+  private PigeonIMU imu;
+  private PigeonIMU.GeneralStatus imuStatus;
+  private int imuErrorCode;
+  private double[] ypr;
+
   private int whichPod;
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {
+    var pigTalon = new WPI_TalonSRX(20);
+    imu = new PigeonIMU(pigTalon);
+    imuStatus = new PigeonIMU.GeneralStatus();
+    ypr = new double[3];
+    imu.setYaw(0);
+
     backLeft = new SwervePod(1 , POD1_OFFSET , false);
     frontLeft = new SwervePod(2 , POD2_OFFSET , false);
     frontRight = new SwervePod(3 , POD3_OFFSET , false);
@@ -42,6 +56,10 @@ public class SwerveDrive extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    imuErrorCode = imu.getGeneralStatus(imuStatus).value;
+    imu.getYawPitchRoll(ypr);
+    SmartDashboard.putNumber("IMU Health", imuErrorCode);
+    SmartDashboard.putNumber("IMU Yaw", ypr[0]);
   }
 
   public SwervePod getPod(int pod){
@@ -122,10 +140,10 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("y1", y1);
     SmartDashboard.putNumber("x2", x2);
 
-    backRight.drivePod (backRightSpeed, backRightAngle);
-    backLeft.drivePod (backLeftSpeed, backLeftAngle);
-    frontRight.drivePod (frontRightSpeed, frontRightAngle);
-    frontLeft.drivePod (frontLeftSpeed, frontLeftAngle);
+    backRight.drivePod (backRightSpeed, backRightAngle, ypr[0]);
+    backLeft.drivePod (backLeftSpeed, backLeftAngle, ypr[0]);
+    frontRight.drivePod (frontRightSpeed, frontRightAngle, ypr[0]);
+    frontLeft.drivePod (frontLeftSpeed, frontLeftAngle, ypr[0]);
 
   }
 

@@ -24,6 +24,7 @@ public class SwervePod extends SubsystemBase {
   private final double SPARE_POD_ENCODER_OFFSET = 0;//TODO get real offset
 
   private double encoderOffset;
+  private double fieldAdjust;
 
   private int podID;
   //private boolean usingSpare;
@@ -32,6 +33,7 @@ public class SwervePod extends SubsystemBase {
     driveMotor = new CANSparkMax(driveID, MotorType.kBrushless);
     swerveMotor = new CANSparkMax(driveID + 10, MotorType.kBrushless);
     this.encoderOffset = encoderOffset;
+    fieldAdjust = 0;
 
     if(usingSpare){
       dirEnc = new CANCoder(SPARE_POD_ENCODER_ID);
@@ -71,7 +73,7 @@ public class SwervePod extends SubsystemBase {
   }
 
   public double getAngle(){
-    double angle = dirEnc.getAbsolutePosition() + encoderOffset;
+    double angle = dirEnc.getAbsolutePosition() + encoderOffset + fieldAdjust;
     if(angle > 180){
       angle -= 360;
     }
@@ -138,7 +140,8 @@ public class SwervePod extends SubsystemBase {
     turnPod(directionControl.calculate(getAngle(), direction));
   }
 
-  public void drivePod(double drive , double direction){
+  public void drivePod(double drive , double direction , double yaw){
+    fieldAdjust = yaw;
     setDirection(direction);
     if(Math.abs(drive) > .1){
       driveMotor.set(drive);
