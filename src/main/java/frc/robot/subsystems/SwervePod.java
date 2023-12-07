@@ -72,8 +72,12 @@ public class SwervePod extends SubsystemBase {
     return driveEnc.getPosition() / 8.14;
   }
 
-  public double getAngle(){
-    double angle = dirEnc.getAbsolutePosition() + encoderOffset + fieldAdjust;
+  public void setFieldAdjust(double fieldAdjust){
+    this.fieldAdjust = fieldAdjust;
+  }
+
+  public double getAngle(){//TODO test field
+    double angle = dirEnc.getAbsolutePosition() + encoderOffset - fieldAdjust;//swerve goes clockwise, pigeon yaw goes counter clockwise so subtract
     if(angle > 180){
       angle -= 360;
     }

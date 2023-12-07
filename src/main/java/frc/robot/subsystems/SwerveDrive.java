@@ -58,8 +58,24 @@ public class SwerveDrive extends SubsystemBase {
     // This method will be called once per scheduler run
     imuErrorCode = imu.getGeneralStatus(imuStatus).value;
     imu.getYawPitchRoll(ypr);
+    yawLimit();
     SmartDashboard.putNumber("IMU Health", imuErrorCode);
     SmartDashboard.putNumber("IMU Yaw", ypr[0]);
+    backLeft.setFieldAdjust(ypr[0]);//TODO Test This!
+    frontLeft.setFieldAdjust(ypr[0]);
+    frontRight.setFieldAdjust(ypr[0]);
+    backRight.setFieldAdjust(ypr[0]);
+  }
+
+  public void yawLimit(){//TODO test this!
+    if(ypr[0] > 180){
+      imu.setYaw(ypr[0] - 360);
+      imu.getYawPitchRoll(ypr);
+    }
+    else if(ypr[0] < -180){
+      imu.setYaw(ypr[0] + 360);
+      imu.getYawPitchRoll(ypr);
+    }
   }
 
   public SwervePod getPod(int pod){
